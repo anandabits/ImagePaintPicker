@@ -8,54 +8,25 @@
 
 import SwiftUI
 
-
 struct SizedImage {
-    let original: Image
-    let flipped: Image
+    let image: Image
     let size: CGSize
 }
 
-struct CompensatingImagePaint {
-    //var originalImage: Image
-    //var flippedImage: Image
-    //var imageSize: CGSize
+struct SizedImagePaint {
     var image: SizedImage
     var sourceRect: CGRect = .unit
     var scale: CGFloat = 1
 }
 
-extension CompensatingImagePaint {
-    var verticallyCompensatedSourceRect: CGRect {
-        var result = sourceRect
-        result.origin.y = 1 - sourceRect.maxY
-        return result
-    }
-
-    var horizontallyCompensatedScale: CGFloat {
-        sourceRect.width * scale
-    }
-
-    var verticallyCompensatedScale: CGFloat {
-        sourceRect.height * scale
-    }
-
-    enum ScaleCompensation: Hashable { case horizontal, vertical }
+extension SizedImagePaint {
     func paint(
-        flipCompensation: Bool = true,
-        sourceRectCompensation: Bool = true,
-        scaleCompensation: ScaleCompensation? = .horizontal,
         additionalScale: CGFloat = 1
     ) -> ImagePaint {
         ImagePaint(
-            image: flipCompensation ? image.flipped : image.original,
-            sourceRect: sourceRectCompensation ? verticallyCompensatedSourceRect : sourceRect,
-            scale: additionalScale * {
-                switch scaleCompensation {
-                case nil:         return scale
-                case .horizontal: return horizontallyCompensatedScale
-                case .vertical:   return verticallyCompensatedScale
-                }
-            }()
+            image: image.image,
+            sourceRect: sourceRect,
+            scale: additionalScale * scale
         )
     }
 }

@@ -35,8 +35,8 @@ extension Image {
 extension Binding where Value: Equatable {
     func onChange(_ action: @escaping (Value) -> Void) -> Binding {
         Binding(
-            getValue: { self.wrappedValue },
-            setValue: {
+            get: { self.wrappedValue },
+            set: {
                 let oldValue = self.wrappedValue
                 self.wrappedValue = $0
                 let newValue = self.wrappedValue

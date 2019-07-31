@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ImagePaintSelector {
-    @Binding var imagePaint: CompensatingImagePaint
+    @Binding var imagePaint: SizedImagePaint
     var lockAspectRatio = true
     var allowOverflowOnBothAxes = true
     var flipCompensation = true
@@ -23,9 +23,6 @@ struct ImagePaintSelector {
 
 extension ImagePaintSelector: View {
     var sourceRect: CGRect { imagePaint.sourceRect }
-    var image: Image {
-        flipCompensation ? imagePaint.image.flipped : imagePaint.image.original
-    }
 
     var body: some View {
         GeometryReader { proxy in
@@ -46,7 +43,7 @@ extension ImagePaintSelector: View {
         Rectangle()
             .size(size)
             .offset(size)
-            .fill(image.paint(
+            .fill(imagePaint.image.image.paint(
                 scale: size.width / imagePaint.image.size.width)
             )
             .overlay(Color.black.opacity(0.6))
@@ -55,7 +52,7 @@ extension ImagePaintSelector: View {
     func selectionOverlayImage(size: CGSize) -> some View {
         Rectangle()
             .size(size * sourceRect.size)
-            .fill(imagePaint.paint(flipCompensation: flipCompensation))
+            .fill(imagePaint.paint())
             .shadow(color: Color.white.opacity(0.35), radius: 4, x: 0, y: 0)
             .shadow(color: Color.black.opacity(0.5), radius: 3, x: 0, y: 0)
             .offset(size + CGSize(point: sourceRect.origin) * size)
